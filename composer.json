@@ -1,0 +1,22 @@
+{
+    "name": "mario-legenda/blue-dot",
+    "description": "Parse xml with sql syntax",
+    "keywords": ["xml", "php"],
+    "homepage": "https://github.com/MarioLegenda",
+    "type": "library",
+    "license": "MIT",
+    "version" : "0.0.1",
+    "authors": [
+        {
+            "name": "Mario Škrlec",
+            "email": "whitepostmail@gmail.com",
+            "homepage": "https://github.com/MarioLegenda"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "autoload": {
+        "psr-4": {"BlueDot\\": "src/BlueDot"}
+    }
+}
