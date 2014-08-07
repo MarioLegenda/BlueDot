@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<podaci>
+    <osoba id="1">
+        <osobni description="osnovni osobni podaci">
+            <ime>Mario</ime>
+            <prezime>Škrlec</prezime>
+            <rodjenje birth="birth atribute">
+                <dan>18</dan>
+                <mjesec>6</mjesec>
+                <godina>1986</godina>
+            </rodjenje>
+            <oib>125487965896</oib>
+            <adresa>Sunčana 24</adresa>
+            <mjestoStanovanja>Ernestinovo</mjestoStanovanja>
+            <ppBroj>21215</ppBroj>
+        </osobni>
+    </osoba>
+</podaci>
