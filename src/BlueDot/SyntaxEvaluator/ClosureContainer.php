@@ -9,6 +9,31 @@
 namespace BlueDot\SyntaxEvaluator;
 
 
-class ClosureContainer {
+class ClosureContainer
+{
+    private $closures = array();
 
+    public function __construct() {
+
+    }
+
+    public function addClosure($key, \Closure $closure) {
+        $this->closures[$key] = $closure;
+    }
+
+    public function closureExists($key) {
+        if ( ! array_key_exists($key, $this->closures ) OR ! $this->closures[$key] instanceof \Closure ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function getClosure($key) {
+        if( $this->closureExists($key) === true ) {
+            return $this->closures[$key];
+        }
+
+        return false;
+    }
 } 

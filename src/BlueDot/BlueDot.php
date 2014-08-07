@@ -9,9 +9,14 @@
 namespace BlueDot;
 
 use BlueDot\SyntaxEvaluator\SyntaxEvaluator;
+use BlueDot\SyntaxEvaluator\SyntaxExceptions\IncorrectSyntaxException;
 
 class BlueDot
 {
+
+    /**
+     * Pravila: Sve eksepcije hvata ovdje
+     */
     private $xmlFilePath;
     private $syntaxEvaluator;
 
@@ -21,6 +26,13 @@ class BlueDot
     }
 
     public function prepare($sqlQuery) {
-        $this->syntaxEvaluator->evaluate($sqlQuery);
+        try {
+            $this->syntaxEvaluator->evaluate($sqlQuery);
+        }
+        catch( IncorrectSyntaxException $e ) {
+            echo $e->getMessage() . "\r\n";
+            echo $e->getTraceAsString() . "\r\n";
+            die();
+        }
     }
 } 

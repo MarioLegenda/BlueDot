@@ -1,9 +1,6 @@
 <?php
 
-require 'autoloader.php';
-
-$autoloader = new Autoloader();
-$autoloader->register();
+require_once '../../vendor/autoload.php';
 
 
 use BlueDot\BlueDot;

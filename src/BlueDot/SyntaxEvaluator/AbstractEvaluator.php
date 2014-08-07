@@ -11,13 +11,15 @@ namespace BlueDot\SyntaxEvaluator;
 
 abstract class AbstractEvaluator
 {
-    private $closureContainer;
+    protected $closureContainer;
 
     public function __construct() {
         $closureContainer = new ClosureContainer();
 
         $closureContainer->addClosure('select', function() {
+            if( func_num_args() == 0) {
 
+            }
         });
 
         $this->closureContainer = $closureContainer;
