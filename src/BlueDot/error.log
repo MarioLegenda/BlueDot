@@ -1,0 +1,2 @@
+[2014-08-08 11:51:42] name.ERROR: Internal Error. Select statement not initialized properly. Expected SELECT, INSERT, UPDATE or DELETE got select [] []
+[2014-08-08 11:55:12] name.ERROR: Internal Error. Select statement not initialized properly. Expected SELECT, INSERT, UPDATE or DELETE got select [] []

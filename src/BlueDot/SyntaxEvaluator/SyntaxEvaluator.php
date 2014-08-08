@@ -9,11 +9,13 @@
 namespace BlueDot\SyntaxEvaluator;
 
 use BlueDot\SyntaxEvaluator\SyntaxExceptions\IncorrectSyntaxException;
+use BlueDot\Statements\Statement;
 
 class SyntaxEvaluator extends AbstractEvaluator
 {
     private $match;
     private $sqlQuery;
+    private $statement;
 
     public function __construct() {
         parent::__construct();
@@ -28,13 +30,14 @@ class SyntaxEvaluator extends AbstractEvaluator
         if( $this->closureContainer->closureExists($this->match) === true ) {
             $anonymousEval = $this->closureContainer->getClosure($this->match);
 
-            $evaluated = $anonymousEval->__invoke($this->sqlQuery);
+            $evaluatedQuery = $anonymousEval->__invoke($this->sqlQuery);
 
-            if( $evaluated instanceof SyntaxError ) {
-                // throw new IncorrectSyntaxException
+            if( $evaluatedQuery instanceof SyntaxError ) {
+                throw new IncorrectSyntaxException($evaluatedQuery);
             }
 
-
+            $this->statement = $evaluatedQuery;
+            return;
         }
 
         $sytaxError = new SyntaxError();
@@ -42,7 +45,7 @@ class SyntaxEvaluator extends AbstractEvaluator
         throw new IncorrectSyntaxException($sytaxError);
     }
 
-    public function getSyntaxToken() {
-
+    public function getStatement() {
+        return $this->statement;
     }
 } 

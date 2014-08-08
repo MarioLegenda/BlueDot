@@ -2,15 +2,16 @@
 /**
  * Created by PhpStorm.
  * User: Mario
- * Date: 07.08.14.
- * Time: 16:37
+ * Date: 08.08.14.
+ * Time: 14:06
  */
 
-namespace BlueDot\SyntaxEvaluator\SyntaxExceptions;
+namespace BlueDot\Processor\ProcessorExceptions;
+
 
 use BlueDot\GlobalException\GlobalException;
 
-class IncorrectSyntaxException extends GlobalException
+class ProcessingException extends GlobalException
 {
     public function __construct($message) {
         $this->sendToScreen($message);

@@ -2,21 +2,19 @@
 /**
  * Created by PhpStorm.
  * User: Mario
- * Date: 07.08.14.
- * Time: 16:59
+ * Date: 08.08.14.
+ * Time: 13:40
  */
 
-namespace BlueDot\SyntaxEvaluator;
+namespace BlueDot\Processor;
 
 
-class SyntaxError
+class ProcessingError
 {
     private $errors = array(
-        'unknown-order' => '',
-        'unknown-select' => '',
-        'unknown-attr' => '',
-        'misc-error' => '',
-        'closure-num-args' => ''
+        'file-not-found' => false,
+        'file-not-readable' => false,
+        'file-not-valid' => false
     );
 
     public function __construct() {
@@ -38,6 +36,16 @@ class SyntaxError
         }
 
         return $this->errors[$type];
+    }
+
+    public function hasErrors() {
+        foreach( $this->errors as $error ) {
+            if( $error !== false ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getArrayedErrors() {
