@@ -8,27 +8,23 @@
 
 namespace BlueDot\Processor;
 
+use BlueDot\Processor\ProcessorExceptions\ProcessingException;
+
 class Validator
 {
-    private $errors;
-    private $xmlFilePath;
-
-    public function __construct($xmlFilePath) {
-        $this->errors = new ProcessingError();
+    public static function validate($xmlFilePath) {
         if( ! file_exists($xmlFilePath) ) {
-            $this->errors->addError('file-not-found', 'File ' . $xmlFilePath . ' is not where it should be');
-            return;
+            $errors = new ProcessingError();
+            $errors->addError('file-not-found', 'File ' . $xmlFilePath . ' is not where it should be');
+            throw new ProcessingException($errors);
         }
 
         if( ! is_readable($xmlFilePath) ) {
-            $this->errors->addError('file-not-readable', 'File ' . $xmlFilePath . ' is not where it should be');
-            return;
+            $errors = new ProcessingError();
+            $errors->addError('file-not-readable', 'File ' . $xmlFilePath . ' is not where it should be');
+            throw new ProcessingException($errors);
         }
 
-        $this->xmlFilePath = $xmlFilePath;
-    }
-
-    public function validate(\XMLReader &$reader) {
-        $reader->open($this->xmlFilePath);
+        return true;
     }
 } 

@@ -9,13 +9,11 @@
 namespace BlueDot\SyntaxEvaluator;
 
 use BlueDot\SyntaxEvaluator\SyntaxExceptions\IncorrectSyntaxException;
-use BlueDot\Statements\Statement;
 
 class SyntaxEvaluator extends AbstractEvaluator
 {
     private $match;
     private $sqlQuery;
-    private $statement;
 
     public function __construct() {
         parent::__construct();
@@ -29,23 +27,11 @@ class SyntaxEvaluator extends AbstractEvaluator
 
         if( $this->closureContainer->closureExists($this->match) === true ) {
             $anonymousEval = $this->closureContainer->getClosure($this->match);
-
-            $evaluatedQuery = $anonymousEval->__invoke($this->sqlQuery);
-
-            if( $evaluatedQuery instanceof SyntaxError ) {
-                throw new IncorrectSyntaxException($evaluatedQuery);
-            }
-
-            $this->statement = $evaluatedQuery;
-            return;
+            return $anonymousEval;
         }
 
         $sytaxError = new SyntaxError();
-        $sytaxError->addError('unknown-order', "Unknown order <b style='color:#C90000'>" . $this->match . '</b> in ' . $this->sqlQuery);
+        $sytaxError->addError('unknown-order', "Unknown statement <b style='color:#C90000'>" . $this->match . "</b> in <b style='color:#4580FF'>" . $this->sqlQuery . "</b>");
         throw new IncorrectSyntaxException($sytaxError);
-    }
-
-    public function getStatement() {
-        return $this->statement;
     }
 } 

@@ -8,10 +8,24 @@
 
 namespace BlueDot\Statements;
 
+use BlueDot\Processor\Processor;
+use BlueDot\SyntaxEvaluator\Token;
 
 class SelectStatement extends Statement
 {
-    public function __construct($mainStatement, array $tags) {
-        parent::__construct($mainStatement, $tags);
+    private $processor;
+
+    public function __construct(Token $token) {
+        parent::__construct($token);
     }
+
+    public function addProcessor(Processor $processor) {
+        $this->processor = $processor;
+    }
+
+    public function get($tagKey) {
+
+    }
+
+
 } 

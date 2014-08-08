@@ -23,7 +23,7 @@ abstract class AbstractEvaluator
             if( func_num_args() == 0) {
                 $syntaxError = new SyntaxError();
                 $syntaxError->addError('closure-num-args', "Select statement closure evaluator: <b style='color:#C90000'>Invalid number of arguments</b>");
-                return $syntaxError;
+                throw new IncorrectSyntaxException($syntaxError);
             }
 
             $sqlQuery = strtolower(func_get_arg(0));
@@ -33,9 +33,9 @@ abstract class AbstractEvaluator
             if( ! isset($matches[1]) OR ! isset($matches[2] ) ) {
                 $syntaxError = new SyntaxError();
 
-                ( ! isset($matches[0]) ) ? $syntaxError->addError('unknown-order', "<b style='color:#C90000'>Unknown order in your query.</b> 'Select query should start with a <b style='color#C90000'>SELECT</b> statement") : '';
-                ( ! isset($matches[1]) ) ? $syntaxError->addError('unknown-order', "<b style='color:#C90000'>Unknown order in your query</b> 'Select' query should start with a <b style='color#C90000'>SELECT</b> statement and a list of comma separated strings enclosed in []") : '';
-                return $syntaxError;
+                ( ! isset($matches[0]) ) ? $syntaxError->addError('unknown-order', "<b style='color:#C90000'>Unknown statement in your query.</b> 'Select query should start with a <b style='color#C90000'>SELECT</b> statement") : '';
+                ( ! isset($matches[1]) ) ? $syntaxError->addError('unknown-order', "<b style='color:#C90000'>Unknown statement in your query</b> 'Select' query should start with a <b style='color#C90000'>SELECT</b> statement and a list of comma separated strings enclosed in []") : '';
+                throw new IncorrectSyntaxException($syntaxError);
             }
 
             $mainStatement = $matches[1];
@@ -47,7 +47,12 @@ abstract class AbstractEvaluator
 
             $tags = preg_split('#,\s+#', $searchTags);
 
-            $selectStatement = new SelectStatement($mainStatement, $tags);
+            $token = new Token(array(
+                'statement-type' => $mainStatement,
+                'tags' => $tags
+            ));
+
+            $selectStatement = new SelectStatement($token);
 
             return $selectStatement;
         });

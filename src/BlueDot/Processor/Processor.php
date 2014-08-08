@@ -8,22 +8,19 @@
 
 namespace BlueDot\Processor;
 
-use BlueDot\Processor\ProcessorExceptions\ProcessingException;
-use BlueDot\Processor\Validator;
-
 class Processor
 {
     private $xmlReader;
+    private $xmlArray;
 
-    public function __construct(Validator $validator) {
-        $xmlReader = new \XMLReader();
-        $validated = $validator->validate($xmlReader);
-        if( $validator->validate($xmlReader) instanceof ProcessingError ) {
-            throw new ProcessingException($validated);
+    public function __construct($xmlFilePath) {
+        if ( Validator::validate($this->xmlReader) === true) {
+            $this->xmlReader = new \XMLReader();
+            $this->xmlReader->open($xmlFilePath);
         }
+    }
 
-        $this->xmlReader = $xmlReader;
-
-        return true;
+    public function run() {
+        
     }
 } 

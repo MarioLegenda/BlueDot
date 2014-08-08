@@ -9,8 +9,6 @@
 namespace BlueDot;
 
 use BlueDot\Processor\Processor;
-use BlueDot\Processor\Validator;
-
 use BlueDot\Statements\StatementExceptions\InternalStatementException;
 use BlueDot\SyntaxEvaluator\SyntaxExceptions\IncorrectSyntaxException;
 
@@ -24,30 +22,30 @@ class BlueDot
      */
     private $xmlFilePath;
     private $syntaxEvaluator;
-    private $processor;
 
     public function __construct($xmlFilePath) {
         $this->xmlFilePath = $xmlFilePath;
         $this->syntaxEvaluator = new SyntaxEvaluator();
-        $this->processor = new Processor(new Validator($xmlFilePath));
     }
 
     public function prepare($sqlQuery) {
         try {
-            $this->syntaxEvaluator->evaluate($sqlQuery);
+            $syntaxEval = $this->syntaxEvaluator->evaluate($sqlQuery);
+            $statement = $syntaxEval->__invoke($sqlQuery);
+
+            $processor = new Processor($this->xmlFilePath);
+            $processor->run();
+
+            $statement->addProcessor($processor);
+            return $statement;
         }
         catch( IncorrectSyntaxException $e ) {
-            echo $e->getMessage() . "\r\n";
-            echo $e->getTraceAsString() . "\r\n";
+            echo $e->getMessage();
             die();
         }
         catch( InternalStatementException $e ) {
             echo "An error has been sent to error.log in the BlueDot <b style='color:#C90000'>root</b><br>
             <b style='color:#C90000'>BlueDot terminated...</b>";
         }
-    }
-
-    public function query() {
-
     }
 } 
