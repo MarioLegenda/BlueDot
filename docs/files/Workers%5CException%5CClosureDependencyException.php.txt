@@ -1,0 +1,17 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mario
+ * Date: 23.10.14.
+ * Time: 13:32
+ */
+
+namespace BlueDot\Workers\Exception;
+
+
+class ClosureDependencyException extends \Exception
+{
+    public function __construct($message) {
+        $this->message = $message;
+    }
+} 
