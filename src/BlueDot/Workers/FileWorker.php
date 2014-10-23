@@ -14,15 +14,32 @@ use BlueDot\Workers\Interfaces\WorkerInterface;
 
 class FileWorker implements WorkerInterface, ClosureDependencyInterface
 {
+    /**
+     * @var Resource $handle
+     */
     private $handle;
+
+    /**
+     * @var array Contains tag-name and main-tag key that the client injected trough Select::select($tagName) and Select::from($mainTag)
+     */
     private $options = array();
 
-    private $result;
+    /**
+     * @var array
+     */
+    private $result = null;
 
     public function __construct() {
 
     }
 
+    /**
+     *
+     *
+     * @param string $variable
+     * @param string $value
+     * @throws Exception\ClosureDependencyException
+     */
     public function addFromClosure($variable, $value) {
         if( ! property_exists($this, $variable) ) {
             throw new ClosureDependencyException("Instance variable " . $variable . " does not exist in FileWorker::addFromClosure()");
@@ -31,11 +48,24 @@ class FileWorker implements WorkerInterface, ClosureDependencyInterface
         $this->{$variable} = $value;
     }
 
+    /**
+     * @param array $options
+     * @return $this
+     */
+
     public function addOptions(array $options) {
         $this->options = $options;
 
         return $this;
     }
+
+    /**
+     * Creates FileSearchWorker and traverses trough the xml file, line by line.
+     *
+     * @see BlueDot\Workers\FileSearchWorker
+     *
+     * @return $this
+     */
 
     public function search() {
         $searchWorker = new FileSearchWorker($this->options);
@@ -59,6 +89,10 @@ class FileWorker implements WorkerInterface, ClosureDependencyInterface
 
         return $this;
     }
+
+    /**
+     * @return array
+     */
 
     public function getResult() {
         return $this->result;

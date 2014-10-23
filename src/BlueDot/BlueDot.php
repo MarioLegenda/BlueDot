@@ -1,17 +1,51 @@
 <?php
 
+/**
+ * @author Mario Škrlec <whitepostmail@gmail.com>
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @api
+ *
+ */
+
+
 namespace BlueDot;
 
 use BlueDot\Config\Config;
 use BlueDot\Statement\Select;
 
+/**
+ * BlueDot public client code interface
+ *
+ * Description:
+ * BlueDot searches for the desired value by knowing the parent tag name ( $mainTag ) and the desired tag name ( $tagName ) who's value
+ * we want. $tagName is injected trough Select::select($tagName) and $mainTag is injected trough Select::from($mainTag). It then
+ * traverses trough the xml file via fgets(), line by line and searches for the value inside $tagName tag with regular expressions. After the
+ * value was found, it returns StatementResult object in an array with the desired values.
+ *
+ * @api
+ * @see BlueDot\Config\Config
+ * @see BlueDot\Statement\Select
+ */
+
+
 class BlueDot
 {
+    /**
+     * @var Config
+     * @see BlueDot\Config\Config
+     */
     private $config;
 
     public function __construct(Config $config) {
         $this->config = $config;
     }
+
+    /**
+     * @param $tagName
+     * @see BlueDot\Statement\Select
+     *
+     * @return Select Implements FluentInterface pattern i.e. Select is chainable
+     */
 
     public function select($tagName) {
         $select = new Select($this->config);

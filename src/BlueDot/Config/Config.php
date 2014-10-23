@@ -1,9 +1,9 @@
 <?php
+
 /**
- * Created by PhpStorm.
- * User: Mario
- * Date: 23.10.14.
- * Time: 10:08
+ * @author Mario Škrlec <whitepostmail@gmail.com>
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @api
  */
 
 namespace BlueDot\Config;
@@ -11,14 +11,26 @@ namespace BlueDot\Config;
 
 use BlueDot\Config\Exception\ConfigException;
 
+/**
+ *  Wrapper around path to xml file. Does regular checks.
+ */
+
 class Config
 {
+    /**
+     * @var \SplFileInfo
+     */
     private $fileInfo;
+
+    /**
+     *
+     *
+     * @param string $pathToXml
+     * @throws BlueDot\Config\Exception\ConfigException
+     */
 
     public function __construct($pathToXml) {
         $fileInfo = new \SplFileInfo($pathToXml);
-
-        var_dump($fileInfo->getSize());
 
         if( $fileInfo->getExtension() !== 'xml' ) {
             throw new ConfigException('File needs to be an .xml file. .' . $fileInfo->getExtension() . ' given');
