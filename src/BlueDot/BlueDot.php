@@ -22,6 +22,9 @@ use BlueDot\Statement\Select;
  * traverses trough the xml file via fgets(), line by line and searches for the value inside $tagName tag with regular expressions. After the
  * value was found, it returns StatementResult object in an array with the desired values.
  *
+ * It is important to say that onse BlueDot::select() is called, client code is no longer working the BlueDot object but with Select
+ * object who is chainable
+ *
  * @api
  * @see BlueDot\Config\Config
  * @see BlueDot\Statement\Select

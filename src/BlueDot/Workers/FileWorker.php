@@ -1,9 +1,9 @@
 <?php
+
 /**
- * Created by PhpStorm.
- * User: Mario
- * Date: 23.10.14.
- * Time: 11:57
+ * @author Mario Škrlec <whitepostmail@gmail.com>
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
  */
 
 namespace BlueDot\Workers;
@@ -11,6 +11,11 @@ namespace BlueDot\Workers;
 use BlueDot\Workers\Exception\ClosureDependencyException;
 use BlueDot\Workers\Interfaces\ClosureDependencyInterface;
 use BlueDot\Workers\Interfaces\WorkerInterface;
+
+/**
+ *
+ * Does the actuall job of traversing the file with fgets(). Uses FileSearchWorker to find the desired value
+ */
 
 class FileWorker implements WorkerInterface, ClosureDependencyInterface
 {
@@ -60,7 +65,7 @@ class FileWorker implements WorkerInterface, ClosureDependencyInterface
     }
 
     /**
-     * Creates FileSearchWorker and traverses trough the xml file, line by line.
+     * Creates FileSearchWorker and traverses trough the xml file, line by line by fgets().
      *
      * @see BlueDot\Workers\FileSearchWorker
      *
