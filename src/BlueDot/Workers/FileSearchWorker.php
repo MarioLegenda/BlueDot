@@ -33,6 +33,12 @@ class FileSearchWorker
      * @var bool
      */
     private $mark = false;
+
+    /**
+     * @var int
+     */
+
+    private $passes = 0;
     /**
      * @var null
      */
@@ -45,7 +51,7 @@ class FileSearchWorker
 
     public function __construct(array $options) {
         if( array_key_exists('tag-name', $options) === false OR
-            array_key_exists('main-tag', $options) === false ) {
+            array_key_exists('parent-tag', $options) === false ) {
 
             throw new WorkerException('Invalid options in FileSearchWorker');
         }
@@ -58,11 +64,10 @@ class FileSearchWorker
      * @return bool
      */
     public function isMainTag($fileLine) {
-        //var_dump(htmlspecialchars($fileLine));
-
-        $mainTag = $this->options['main-tag'];
+        $mainTag = $this->options['parent-tag'];
         $regex = "#<" . $mainTag . ">#";
         if( preg_match($regex, $fileLine) ) {
+            $this->passes++;
             return true;
         }
 
@@ -136,6 +141,39 @@ class FileSearchWorker
 
     public function unmark() {
         $this->mark = false;
+    }
+
+    /**
+     * Checks if search has passed a certain number of parent tagges specified in Select::from(). Search stops if that option is set and
+     * true
+     *
+     * @return bool
+     */
+
+    public function isMaximumPass() {
+        if( $this->passes >= $this->options['max-passes'] ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     *
+     */
+
+    public function isFirstResult() {
+        if( $this->options['first-result'] === true ) {
+            $firstResult = $this->options['first-result'];
+
+            if( count($this->saved) >= 1 ) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return false;
     }
 
     /**

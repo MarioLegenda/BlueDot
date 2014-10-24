@@ -76,6 +76,10 @@ class FileWorker implements WorkerInterface, ClosureDependencyInterface
         $searchWorker = new FileSearchWorker($this->options);
 
         while( ($buffer = fgets($this->handle)) !== false ) {
+            if( $searchWorker->isMaximumPass() ) {
+                break;
+            }
+
             if( $searchWorker->isMainTag($buffer) ) {
                 $searchWorker->mark();
                 continue;
@@ -85,12 +89,17 @@ class FileWorker implements WorkerInterface, ClosureDependencyInterface
                 if( $searchWorker->isTag($buffer) ) {
                     $searchWorker->saveValue();
                     $searchWorker->unmark();
+
+                    if( $searchWorker->isFirstResult() ) {
+                        break;
+                    }
                     continue;
                 }
             }
         }
 
         $this->result = $searchWorker->getResult();
+        fclose($this->handle);
 
         return $this;
     }
@@ -100,6 +109,10 @@ class FileWorker implements WorkerInterface, ClosureDependencyInterface
      */
 
     public function getResult() {
+        if( is_array($this->result) AND empty($this->result) ) {
+            return null;
+        }
+
         return $this->result;
     }
 } 

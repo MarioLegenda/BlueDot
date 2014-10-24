@@ -44,11 +44,5 @@ class Evaluator implements EvaluatorInterface
         $size = filesize($this->fileInfo->getLinkTarget());
 
         return Evaluator::FILE_WORKER;
-
-        /*if( $size < 10000000 ) {
-            return Evaluator::OBJECT_WORKER;
-        } else if( $size > 10000000 ) {
-            return Evaluator::FILE_WORKER;
-        }*/
     }
 } 

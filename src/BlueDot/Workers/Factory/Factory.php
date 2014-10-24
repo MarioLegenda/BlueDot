@@ -11,6 +11,7 @@ namespace BlueDot\Workers\Factory;
 
 use BlueDot\Workers\Evaluator;
 use BlueDot\Workers\FileWorker;
+use BlueDot\Workers\ObjectWorker;
 
 
 /**
@@ -35,14 +36,26 @@ class Factory
      * @param callable $dependencyClosure
      * @return FileWorker
      */
-    public static function createWorker(Evaluator $evaluator, \Closure $dependencyClosure = null ) {
+    public static function createWorker(Evaluator $evaluator, \SplFileInfo $fileInfo) {
         $evaluated = $evaluator->evaluate();
         if( $evaluated === Evaluator::FILE_WORKER ) {
             $worker = new FileWorker();
 
+            $dependencyClosure = function($workerInstance) use ($fileInfo) {
+                $handle = fopen($fileInfo->getLinkTarget(), 'r');
+                $workerInstance->addFromClosure('handle', $handle);
+            };
+
             if( $dependencyClosure !== null ) {
                 $dependencyClosure->__invoke($worker);
             }
+
+            return $worker;
+        }
+        else if( $evaluated === Evaluator::OBJECT_WORKER ) {
+            $worker = new ObjectWorker();
+
+
 
             return $worker;
         }

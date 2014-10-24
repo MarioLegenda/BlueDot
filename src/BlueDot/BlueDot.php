@@ -10,7 +10,11 @@
 
 namespace BlueDot;
 
+use BlueDot\Cache\Cache;
+use BlueDot\Cache\ConfigCache;
+use BlueDot\Cache\ValuesCache;
 use BlueDot\Config\Config;
+use BlueDot\Config\Exception\ConfigException;
 use BlueDot\Statement\Select;
 
 /**
@@ -33,25 +37,18 @@ use BlueDot\Statement\Select;
 
 class BlueDot
 {
-    /**
-     * @var Config
-     * @see BlueDot\Config\Config
-     */
-    private $config;
+    private static $config = null;
 
-    public function __construct(Config $config) {
-        $this->config = $config;
+    public static function config(Config $config) {
+        self::$config = $config;
     }
 
-    /**
-     * @param $tagName
-     * @see BlueDot\Statement\Select
-     *
-     * @return Select Implements FluentInterface pattern i.e. Select is chainable
-     */
+    public static function select($tagName) {
+        if( self::$config === null ) {
+            throw new ConfigException('Config is not set. Call BlueDot::config(Config $config) first');
+        }
 
-    public function select($tagName) {
-        $select = new Select($this->config);
+        $select = new Select(self::$config);
         return $select->select($tagName);
     }
 } 

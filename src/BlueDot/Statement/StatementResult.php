@@ -38,4 +38,17 @@ class StatementResult
 
         return $this->result[$key];
     }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+
+    public function exists($key) {
+        if( ! array_key_exists($key, $this->result) ) {
+            return false;
+        }
+
+        return true;
+    }
 } 

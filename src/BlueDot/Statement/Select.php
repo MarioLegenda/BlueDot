@@ -45,6 +45,17 @@ class Select
 
     private $config;
 
+    /**
+     * @var array
+     */
+
+    private $options = array(
+        'tag-name' => null,
+        'parent-tag' => null,
+        'max-passes' => null,
+        'first-result' => false
+    );
+
     public function __construct(Config $config) {
         $this->config = $config;
     }
@@ -60,7 +71,7 @@ class Select
             throw new StatementException('Tag name has to be a string in Select::select($tagName)');
         }
 
-        $this->tagName = $tagName;
+        $this->options['tag-name'] = $tagName;
 
         return $this;
     }
@@ -76,8 +87,18 @@ class Select
             throw new StatementException('Main tag has to be a string in Select::from($mainTag)');
         }
 
-        $this->mainTag = $mainTag;
+        $this->options['parent-tag'] = $mainTag;
 
+        return $this;
+    }
+
+    public function maximumPasses($passes) {
+        $this->options['max-passes'] = $passes;
+        return $this;
+    }
+
+    public function returnFirstResult() {
+        $this->options['first-result'] = true;
         return $this;
     }
 
@@ -93,28 +114,21 @@ class Select
      */
 
     public function query() {
-        if( $this->tagName === null OR $this->mainTag === null ) {
+        $tagName = $this->options['tag-name'];
+        $parentTag = $this->options['parent-tag'];
+        if( $tagName === null OR $parentTag === null ) {
             throw new StatementException('Select: Tag name or main tag are not specified');
         }
 
         $fileInfo = $this->config->getFileInfoObject();
-        $worker = Factory::createWorker(
-            new Evaluator($fileInfo),
-            function($workerInstance) use ($fileInfo) {
-                $handle = fopen($fileInfo->getLinkTarget(), 'r');
-                $workerInstance->addFromClosure('handle', $handle);
-            }
-        );
+        $worker = Factory::createWorker(new Evaluator($fileInfo), $this->config->getFileInfoObject());
 
         $result = $worker
-            ->addOptions(array(
-            'tag-name' => $this->tagName,
-            'main-tag' => $this->mainTag
-            ))
+            ->addOptions($this->options)
             ->search()
             ->getResult();
 
-        if( $result !== null ) {
+        if( $result !== null AND ! empty($result) ) {
             $statements = $this->buildStatementResult($result);
 
             return $statements;
